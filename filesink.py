@@ -13,7 +13,13 @@ from fnmatch import fnmatch
 import pyinotify
 from tornado.ioloop import IOLoop
 import tornado.process
-from mailutils import assemble_mail
+
+SENDMAIL = True
+
+try:
+    from mailutils import assemble_mail
+except:
+    SENDMAIL = False
 
 import toml
 
@@ -121,6 +127,8 @@ class EventHandler(pyinotify.ProcessEvent):
 
 
 def sendmail(to, from_, subject, msg):
+    if not SENDMAIL:
+        return
     s = smtplib.SMTP()
     s.connect()
     msg = assemble_mail(subject, to, from_, text=msg)
