@@ -73,7 +73,7 @@ class EventHandler(pyinotify.ProcessEvent):
 
     def remote_sum(self, event, md5source):
         target_file = os.path.join(self.target, event.name)
-        cmd = "echo '%s  %s' | ssh %s %s -c -" % (md5source, target_file, self.machine, self.sumcmd)
+        cmd = "echo '%s  %s' | %s %s %s -c -" % (md5source, target_file, self.sshcmd, self.machine, self.sumcmd)
         logger.debug("Execute: \"%s\"", cmd)
         return call(cmd, shell=True)
 
@@ -81,8 +81,8 @@ class EventHandler(pyinotify.ProcessEvent):
         logger.info("Delete: \"%s\"", event.pathname)
         os.remove(event.pathname)
 
-    def process(self, event, time):
-        logger.debug("Moving for %d time: %s", time + 1, event.pathname)
+    def process(self, event, times):
+        logger.debug("Moving for %d times: %s", times + 1, event.pathname)
         md5source = self.local_sum(event)
         self.copy(event)
         if self.remote_sum(event, md5source) == 0:
@@ -97,13 +97,13 @@ class EventHandler(pyinotify.ProcessEvent):
             return
         succeed = False
         errorobj = ""
-        for time in range(self.retries):
+        for times in range(self.retries):
             try:
-                if self.process(event, time):
+                if self.process(event, times):
                     succeed = True
                     break
-                logger.warning("Failed for %d time: %s",
-                               time + 1, event.pathname)
+                logger.warning("Failed for %d times: %s",
+                               times + 1, event.pathname)
             except CalledProcessError as e:
                 logger.error("Error %s: %s", event.pathname, e)
                 errorobj = e

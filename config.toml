@@ -1,6 +1,7 @@
 # common config, can be override in sections
 cpcmd = "rsync -ptgoAX"
 sumcmd = "md5sum"
+sshcmd = "ssh"
 retries = 5
 
 [fenrir]
