@@ -12,7 +12,6 @@ from fnmatch import fnmatch
 
 import pyinotify
 from tornado.ioloop import IOLoop
-from tornado import gen
 import tornado.process
 
 import toml

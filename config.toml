@@ -2,7 +2,6 @@
 cpcmd = "rsync -ptgoAX"
 sumcmd = "md5sum"
 retries = 5
-retry_interval = 10
 
 [fenrir]
 watch = "/tmp/filesink/fenrir"
