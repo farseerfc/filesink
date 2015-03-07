@@ -190,8 +190,13 @@ if __name__ == '__main__':
     parser.add_argument('--once',
                         help='run once and return',
                         action="store_true")
+    parser.add_argument('--nomail',
+                        help='do not sendmail',
+                        action="store_true")
     parser.add_argument('config',
                         type=FileType('r'),
                         help='config file in toml format')
     args = parser.parse_args()
+    if args.nomail:
+        SENDMAIL = False
     main(sys.argv[0], args)
