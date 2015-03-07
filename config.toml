@@ -1,0 +1,24 @@
+# common config, can be override in sections
+cpcmd = "rsync -ptgoAX"
+sumcmd = "md5sum"
+retries = 5
+retry_interval = 10
+
+[fenrir]
+watch = "/tmp/filesink/fenrir"
+machine = "jc-yang@fenrir"
+target = "/home/ymir/jc-yang/filesink"
+pattern = "*"
+
+[valkyrie]
+watch = "/tmp/filesink/valkyrie"
+machine = "valkyrie"
+target = "/home/farseerfc/filesink"
+sumcmd = "sha256sum"
+pattern = "*.zip"
+
+[build]
+watch = "/tmp/filesink/build"
+machine = "build.archlinuxcn.org"
+target = "/home/farseerfc/filesink"
+pattern = "*"
