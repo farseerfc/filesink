@@ -93,8 +93,6 @@ class EventHandler(pyinotify.ProcessEvent):
             return False
 
     def handle(self, event):
-        if not fnmatch(event.name, self.pattern):
-            return
         succeed = False
         errorobj = ""
         for times in range(self.retries):
@@ -136,11 +134,18 @@ def sendmail(to, from_, subject, msg):
     s.quit()
 
 
+def makeFilter(pattern):
+    def fileFilter(path):
+        return not fnmatch(path.name, pattern)
+    return fileFilter
+
+
 def sinkmon(config):
     wm = pyinotify.WatchManager()
     ioloop = IOLoop.instance()
 
     handler = EventHandler(
+        makeFilter(config['pattern']),
         config=config,
         wm=wm,
         ioloop=ioloop,
@@ -166,6 +171,7 @@ def main(prog, args):
     if args.once:
         for w in watches:
             handler = EventHandler(
+                makeFilter(w['pattern']),
                 config=w,
                 wm=None,
                 ioloop=None,
