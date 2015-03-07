@@ -13,6 +13,7 @@ from fnmatch import fnmatch
 import pyinotify
 from tornado.ioloop import IOLoop
 import tornado.process
+from mailutils import assemble_mail
 
 import toml
 
@@ -120,14 +121,11 @@ class EventHandler(pyinotify.ProcessEvent):
 
 
 def sendmail(to, from_, subject, msg):
-    try:
-        s = smtplib.SMTP()
-        s.connect()
-        msg = assemble_mail(subject, to, from_, text=msg)
-        s.send_message(msg)
-        s.quit()
-    except:
-        pass
+    s = smtplib.SMTP()
+    s.connect()
+    msg = assemble_mail(subject, to, from_, text=msg)
+    s.send_message(msg)
+    s.quit()
 
 
 def sinkmon(config):
